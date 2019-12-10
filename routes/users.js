@@ -1,5 +1,5 @@
-var express = require('express')
-var router = express.Router()
+const express = require('express')
+const router = express.Router()
 const User = require('../models/user')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
@@ -24,7 +24,12 @@ router.post('/signup', async (req, res) => {
     const token = await user.generateAuthToken()
     res.status(201).send({ user, token })
   } catch (e) {
-    res.status(400).send(e)
+    
+    if (e.code == 11000) {
+      res.status(450).send({ e }) // custom code for duplicate email
+    } else {
+      res.status(400).send({ e })
+    }
   }
 })
 
@@ -50,8 +55,7 @@ router.post('/logoutAll', auth, async (req, res) => {
   } catch (e) {
     res.status(500).send()
   }
-}
-)
+})
 
 router.get('/me', auth, async (req, res) => {
   res.send(req.user)
@@ -62,7 +66,6 @@ router.delete('/me', auth, async (req, res) => {
     await req.user.remove()
 
     res.send(req.user)
-
   } catch (e) {
     res.status(500).send()
   }

@@ -1,12 +1,12 @@
-var express = require('express')
-var router = express.Router()
+const express = require('express')
+const router = express.Router()
 const passport = require('passport')
 const User = require('../models/user')
 const Order = require('../models/order')
 
 /* GET users listing. */
 router.get('/', (req, res) => {
-  console.log(req.query.id);
+  console.log(req.query.id)
   User.findById(req.query.id)
     .populate('orders')
     .exec((error, user) => {
