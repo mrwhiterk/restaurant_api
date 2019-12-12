@@ -24,7 +24,6 @@ router.post('/signup', async (req, res) => {
     const token = await user.generateAuthToken()
     res.status(201).send({ user, token })
   } catch (e) {
-    
     if (e.code == 11000) {
       res.status(450).send({ e }) // custom code for duplicate email
     } else {
@@ -68,6 +67,19 @@ router.delete('/me', auth, async (req, res) => {
     res.send(req.user)
   } catch (e) {
     res.status(500).send()
+  }
+})
+
+router.post('/saveOrder', auth, async (req, res) => {
+  req.user.currentOrder = req.body
+  console.log(req.body);
+
+  console.log(req.user);
+  try {
+    await req.user.save()
+    res.send(req.user)
+  } catch (e) {
+    res.status(500).send(e)
   }
 })
 

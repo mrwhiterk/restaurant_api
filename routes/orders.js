@@ -3,6 +3,7 @@ const router = express.Router()
 const passport = require('passport')
 const User = require('../models/user')
 const Order = require('../models/order')
+const auth = require('../middleware/auth')
 
 /* GET users listing. */
 router.get('/', (req, res) => {
@@ -20,9 +21,13 @@ router.get('/', (req, res) => {
 
 router.post(
   '/',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    res.send('create order route')
+  auth,
+  async (req, res) => {
+
+    // res.send('create order route')
+    console.log(req.body);
+
+    
   }
 )
 
