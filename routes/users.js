@@ -85,4 +85,22 @@ router.get('/getOrder', auth, async (req, res) => {
   res.send(req.user.currentOrder)
 })
 
+router.delete('/orderItem/:name', auth, async (req, res) => {
+  let { name } = req.params;
+  console.log(req.user.currentOrder);
+  req.user.currentOrder = req.user.currentOrder.filter(orderItem => {
+    return orderItem.name !== name
+  })
+
+  console.log(req.user.currentOrder);
+
+  try {
+    await req.user.save()
+
+    res.send(req.user)
+  } catch (error) {
+    res.status(400).send(error)
+  }
+})
+
 module.exports = router
