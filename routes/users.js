@@ -87,7 +87,7 @@ router.get('/getOrder', auth, async (req, res) => {
 
 router.delete('/orderItem/:name', auth, async (req, res) => {
   let { name } = req.params;
-  console.log(req.user.currentOrder);
+
   req.user.currentOrder = req.user.currentOrder.filter(orderItem => {
     return orderItem.name !== name
   })
@@ -100,6 +100,17 @@ router.delete('/orderItem/:name', auth, async (req, res) => {
     res.send(req.user)
   } catch (error) {
     res.status(400).send(error)
+  }
+})
+
+router.delete('/removeCurrentOrder', auth, async (req, res) => {
+  req.user.currentOrder = []
+
+  try {
+    await req.user.save()
+    res.status(200).send()
+  } catch (e) {
+    res.status(500).send(e)
   }
 })
 
