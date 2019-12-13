@@ -19,16 +19,19 @@ router.get('/', (req, res) => {
     })
 })
 
-router.post(
-  '/',
-  auth,
-  async (req, res) => {
+router.post('/', auth, async (req, res) => {
+  let newOrder = new Order({
+    content: req.body,
+    userId: req.user._id
+  })
 
-    // res.send('create order route')
-    console.log(req.body);
+  try {
+    await newOrder.save()
 
-    
+    res.status(201).send(newOrder)
+  } catch (e) {
+    res.status(400).send(e)
   }
-)
+})
 
 module.exports = router
