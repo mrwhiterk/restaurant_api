@@ -24,7 +24,11 @@ let userSchema = new mongoose.Schema({
     price: Number,
     quantity: Number,
     totalPrice: Number
-  }]
+  }],
+  admin: {
+    type: Boolean,
+    default: false
+  }
 })
 
 userSchema.pre('save', async function(next) {
