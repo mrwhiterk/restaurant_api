@@ -114,8 +114,4 @@ router.delete('/removeCurrentOrder', auth, async (req, res) => {
   }
 })
 
-router.get('/test', (req, res) => {
-  res.send('test complete')
-})
-
 module.exports = router
