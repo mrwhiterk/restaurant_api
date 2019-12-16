@@ -7,7 +7,7 @@ const auth = require('../middleware/auth')
 /* GET order listing. */
 router.get('/', auth, async (req, res) => {
   try {
-    let data = await Order.find({ userId: req.user._id });
+    let data = await Order.find({ userId: req.user._id })
     res.send(data)
   } catch (e) {
     res.status(400).send(e)
@@ -15,10 +15,26 @@ router.get('/', auth, async (req, res) => {
 })
 
 /* GET all order listing. */
-router.get('/all', auth, async (req, res) => {
+router.get('/all/', auth, async (req, res) => {
   try {
-    let data = await Order.find().populate('userId').exec();
-    console.log(data);
+    let data = await Order.find()
+      .populate('userId')
+      .exec()
+    console.log(data)
+    res.send(data)
+  } catch (e) {
+    res.status(500).send(e)
+  }
+})
+
+router.get('/all/:isActive', auth, async (req, res) => {
+  let { isActive } = req.params
+
+  try {
+    let data = await Order.find({ isActive })
+      .populate('userId')
+      .exec()
+    console.log(data)
     res.send(data)
   } catch (e) {
     res.status(500).send(e)
@@ -44,57 +60,82 @@ router.post('/', auth, async (req, res) => {
 /* PUT cancel order. */
 router.put('/cancel/:id', auth, async (req, res) => {
   try {
-    let order = await Order.findById(req.params.id);
+    let order = await Order.findById(req.params.id)
 
     order.submitted = false
     await order.save()
 
     res.send(order)
   } catch (error) {
-    console.log(error);
+    console.log(error)
     res.status(400).send(error)
   }
 })
 
 router.put('/resume/:id', auth, async (req, res) => {
   try {
-    let order = await Order.findById(req.params.id);
+    let order = await Order.findById(req.params.id)
 
     order.submitted = true
     await order.save()
 
     res.send(order)
   } catch (error) {
-    console.log(error);
+    console.log(error)
     res.status(400).send(error)
   }
 })
 
 router.put('/complete/:id', auth, async (req, res) => {
   try {
-    let order = await Order.findById(req.params.id);
+    let order = await Order.findById(req.params.id)
 
     order.completed = true
     await order.save()
 
     res.send(order)
   } catch (error) {
-    console.log(error);
+    console.log(error)
     res.status(400).send(error)
   }
 })
 
-
 router.put('/incomplete/:id', auth, async (req, res) => {
   try {
-    let order = await Order.findById(req.params.id);
+    let order = await Order.findById(req.params.id)
 
     order.completed = false
     await order.save()
 
     res.send(order)
   } catch (error) {
-    console.log(error);
+    console.log(error)
+    res.status(400).send(error)
+  }
+})
+
+router.put('/archive/:id', auth, async (req, res) => {
+  try {
+    let order = await Order.findById(req.params.id)
+
+    order.isActive = false
+    await order.save()
+
+    res.send(order)
+  } catch (error) {
+    res.status(400).send(error)
+  }
+})
+
+router.put('/activate/:id', auth, async (req, res) => {
+  try {
+    let order = await Order.findById(req.params.id)
+
+    order.isActive = true
+    await order.save()
+
+    res.send(order)
+  } catch (error) {
     res.status(400).send(error)
   }
 })

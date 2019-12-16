@@ -12,7 +12,8 @@ let orderSchema = new mongoose.Schema(
     ],
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     completed: { type: Boolean, default: false },
-    submitted: { type: Boolean, default: true }
+    submitted: { type: Boolean, default: true },
+    isActive: {type: Boolean, default: true}
   },
   {
     timestamps: true
